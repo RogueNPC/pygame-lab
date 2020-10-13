@@ -43,9 +43,12 @@ target_x = 250
 target_y = 0
 
 # TODO: Add variables for the "enemy" character
+# NOTE: create a list for multiple enemies
+enemy_x = 250
+enemy_y = 0
 
 # Other variables
-velocity = 3
+velocity = 7
 points = 0
 
 # Set up the drawing window
@@ -101,9 +104,10 @@ while running:
         player_y += velocity
 
     # Update the target
-    target_y += velocity
+    target_y += velocity * .5
 
     # TODO: Update the enemy's y position based on its velocity
+    enemy_y += velocity * .5
 
     # If target went off the screen, reset it
     if target_y > SCREEN_HEIGHT: 
@@ -111,6 +115,9 @@ while running:
         target_x = random.random() * (SCREEN_WIDTH - CHARACTER_WIDTH)
 
     # TODO: If enemy went off the screen, reset it
+    if enemy_y > SCREEN_HEIGHT:
+        enemy_y = 0
+        enemy_x = random.random() * (SCREEN_WIDTH - CHARACTER_WIDTH)
 
     # If player collides with target, reset it & increment points
     if is_colliding(player_x, player_y, target_x, target_y, CHARACTER_WIDTH, CHARACTER_HEIGHT):
@@ -119,6 +126,10 @@ while running:
         target_x = random.random() * (SCREEN_WIDTH - CHARACTER_WIDTH)
 
     # TODO: If player collides with enemy, reset it & set points to 0
+    if is_colliding(player_x, player_y, enemy_x, enemy_y, CHARACTER_WIDTH, CHARACTER_HEIGHT):
+        points = 0
+        enemy_y = 0
+        enemy_x = random.random() * (SCREEN_WIDTH - CHARACTER_WIDTH)
 
     # Fill screen with white
     screen.fill(WHITE)
@@ -130,6 +141,7 @@ while running:
     pygame.draw.rect(screen, GREEN, (target_x, target_y, CHARACTER_WIDTH, CHARACTER_HEIGHT))
 
     # TODO: Draw the enemy as a red square
+    pygame.draw.rect(screen, RED, (enemy_x, enemy_y, CHARACTER_WIDTH, CHARACTER_HEIGHT))
 
     # Draw the points
     draw_text(text=f'Points: {points}', color=BLACK, font_size=24, x=20, y=20)
